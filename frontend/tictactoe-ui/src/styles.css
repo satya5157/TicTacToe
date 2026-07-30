@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Space+Mono:wght@400;700&display=swap');
+
+:root {
+  --bg-top: #f8f5e7;
+  --bg-bottom: #d9f0ff;
+  --card: #ffffff;
+  --ink: #102a43;
+  --accent: #1f6feb;
+  --accent-2: #ff8a00;
+  --ok: #007f5f;
+  --warn: #b42318;
+  --line: #cbd5e1;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  font-family: 'Outfit', sans-serif;
+  color: var(--ink);
+  background: radial-gradient(circle at top left, #fff5cc, transparent 35%),
+    radial-gradient(circle at 90% 15%, #d2f4ff, transparent 30%),
+    linear-gradient(160deg, var(--bg-top), var(--bg-bottom));
+}

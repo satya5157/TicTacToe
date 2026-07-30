@@ -1,0 +1,16 @@
+# Root
+.DS_Store
+Thumbs.db
+
+# Node / Angular
+frontend/tictactoe-ui/node_modules/
+frontend/tictactoe-ui/dist/
+frontend/tictactoe-ui/coverage/
+frontend/tictactoe-ui/.angular/
+
+# .NET
+backend/**/bin/
+backend/**/obj/
+
+# Logs
+*.log

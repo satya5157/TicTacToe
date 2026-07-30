@@ -1,0 +1,100 @@
+<main class="page-shell">
+  <section class="headline card">
+    <h1>Tic Tac Toe Arena</h1>
+    <p>Backend-driven gameplay with move history, undo, scoreboard, and computer mode.</p>
+  </section>
+
+  <section class="layout-grid">
+    <article class="card game-panel">
+      <div class="panel-top">
+        <label for="mode">Game Mode</label>
+        <select
+          id="mode"
+          [disabled]="isBusy"
+          [(ngModel)]="selectedMode"
+          (ngModelChange)="onModeChange()"
+        >
+          <option value="TwoPlayer">Two Player Mode</option>
+          <option value="VsComputer">Play Against Computer</option>
+        </select>
+      </div>
+
+      <div class="panel-top" *ngIf="selectedMode === 'VsComputer'">
+        <label for="difficulty">Difficulty</label>
+        <select
+          id="difficulty"
+          [disabled]="isBusy"
+          [(ngModel)]="selectedDifficulty"
+          (ngModelChange)="onModeChange()"
+        >
+          <option value="Easy">Easy</option>
+          <option value="Medium">Medium</option>
+          <option value="Hard">Hard</option>
+        </select>
+      </div>
+
+      <div class="status-row" [class.win]="gameState?.status === 'Won'" [class.draw]="gameState?.status === 'Draw'">
+        {{ statusMessage }}
+      </div>
+
+      <div class="board" role="grid" aria-label="Tic tac toe board">
+        <ng-container *ngFor="let row of board; let rowIndex = index">
+          <button
+            *ngFor="let col of row; let colIndex = index"
+            class="cell"
+            [class.win-cell]="isWinningCell(rowIndex, colIndex)"
+            [class.locked]="board[rowIndex][colIndex] !== null || gameState?.status !== 'InProgress'"
+            [disabled]="isBusy || board[rowIndex][colIndex] !== null || gameState?.status !== 'InProgress'"
+            [attr.aria-label]="cellPositionLabel(rowIndex, colIndex)"
+            (click)="onCellClick(rowIndex, colIndex)"
+          >
+            {{ board[rowIndex][colIndex] ?? '' }}
+          </button>
+        </ng-container>
+      </div>
+
+      <div class="actions">
+        <button class="action" [disabled]="isBusy || !canUndo" (click)="undoLastMove()">Undo Last Move</button>
+        <button class="action" [disabled]="isBusy || !gameState" (click)="resetGame()">Reset Game</button>
+        <button class="action warning" [disabled]="isBusy" (click)="resetScoreboard()">Reset Scoreboard</button>
+      </div>
+
+      <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+      <p class="busy" *ngIf="isBusy">Updating...</p>
+    </article>
+
+    <article class="card info-panel">
+      <section>
+        <h2>Scoreboard</h2>
+        <div class="score-grid">
+          <div><span>X Wins</span><strong>{{ scoreboard.xWins }}</strong></div>
+          <div><span>O Wins</span><strong>{{ scoreboard.oWins }}</strong></div>
+          <div><span>Draws</span><strong>{{ scoreboard.draws }}</strong></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Move History</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Move</th>
+              <th>Player</th>
+              <th>Position</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let move of gameState?.moveHistory ?? []; trackBy: trackByMoveNumber">
+              <td>{{ move.moveNumber }}</td>
+              <td>{{ move.player }}</td>
+              <td>Row {{ move.row + 1 }}, Column {{ move.column + 1 }}</td>
+            </tr>
+            <tr *ngIf="(gameState?.moveHistory?.length ?? 0) === 0">
+              <td colspan="3">No moves yet.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </article>
+  </section>
+</main>
