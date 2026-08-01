@@ -1,4 +1,14 @@
 <main class="page-shell">
+  <output
+    class="result-popup"
+    *ngIf="resultPopupMessage"
+    [class.win]="resultPopupType === 'win'"
+    [class.draw]="resultPopupType === 'draw'"
+    aria-live="polite"
+  >
+    {{ resultPopupMessage }}
+  </output>
+
   <section class="headline card">
     <h1>Tic Tac Toe Arena</h1>
     <p>Backend-driven gameplay with move history, undo, scoreboard, and computer mode.</p>

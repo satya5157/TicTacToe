@@ -5,6 +5,47 @@
   gap: 1rem;
 }
 
+.result-popup {
+  position: sticky;
+  top: 1rem;
+  z-index: 50;
+  justify-self: center;
+  width: min(520px, 96%);
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  border: 1px solid #9addbb;
+  background: #ecfdf3;
+  color: #08643f;
+  text-align: center;
+  font-weight: 700;
+  box-shadow: 0 12px 24px rgba(16, 42, 67, 0.18);
+  animation: popup-in 180ms ease-out;
+}
+
+.result-popup.win {
+  border-color: #9addbb;
+  background: #ecfdf3;
+  color: #08643f;
+}
+
+.result-popup.draw {
+  border-color: #ffd37d;
+  background: #fff8e1;
+  color: #8a4b00;
+}
+
+@keyframes popup-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .card {
   background: var(--card);
   border-radius: 20px;

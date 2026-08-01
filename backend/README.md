@@ -1,5 +1,14 @@
 # Backend - TicTacToe.Api
 
+## Software Required
+- Git 2.40+
+- .NET SDK 9.0.x
+
+Check versions:
+
+- `git --version`
+- `dotnet --version`
+
 ## Projects
 - `TicTacToe.Api`: ASP.NET Core Web API
 - `TicTacToe.Api.Tests`: xUnit unit tests
@@ -10,6 +19,11 @@ From `backend`:
 - `dotnet run --project TicTacToe.Api`
 
 Default URL: `http://localhost:5249`
+
+## Verify API
+- Open `http://localhost:5249/api/scoreboard`
+- Or run:
+	- `curl http://localhost:5249/api/scoreboard`
 
 ## Test
 From `backend`:

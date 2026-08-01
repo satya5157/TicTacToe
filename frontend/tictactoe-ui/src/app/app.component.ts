@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { GameApiService } from './game-api.service';
 import { ComputerDifficulty, GameMode, GameStateResponse, Player, ScoreboardResponse } from './models';
@@ -11,19 +11,27 @@ import { ComputerDifficulty, GameMode, GameStateResponse, Player, ScoreboardResp
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   selectedMode: GameMode = 'TwoPlayer';
   selectedDifficulty: ComputerDifficulty = 'Medium';
   gameState: GameStateResponse | null = null;
   scoreboard: ScoreboardResponse = { xWins: 0, oWins: 0, draws: 0 };
   errorMessage = '';
   isBusy = false;
+  resultPopupMessage = '';
+  resultPopupType: 'win' | 'draw' | null = null;
+
+  private popupTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor(private readonly api: GameApiService) {}
 
   ngOnInit(): void {
     this.refreshScoreboard();
     this.createGame();
+  }
+
+  ngOnDestroy(): void {
+    this.clearPopupTimer();
   }
 
   get statusMessage(): string {
@@ -74,8 +82,7 @@ export class AppComponent implements OnInit {
       })
       .subscribe({
         next: (state) => {
-          this.gameState = state;
-          this.scoreboard = state.scoreboard;
+          this.updateGameState(state);
           this.isBusy = false;
         },
         error: (err) => {
@@ -95,8 +102,7 @@ export class AppComponent implements OnInit {
 
     this.api.undo(this.gameState.gameId).subscribe({
       next: (state) => {
-        this.gameState = state;
-        this.scoreboard = state.scoreboard;
+        this.updateGameState(state);
         this.isBusy = false;
       },
       error: (err) => {
@@ -116,8 +122,7 @@ export class AppComponent implements OnInit {
 
     this.api.resetGame(this.gameState.gameId).subscribe({
       next: (state) => {
-        this.gameState = state;
-        this.scoreboard = state.scoreboard;
+        this.updateGameState(state);
         this.isBusy = false;
       },
       error: (err) => {
@@ -167,8 +172,7 @@ export class AppComponent implements OnInit {
 
     this.api.createGame({ mode: this.selectedMode, difficulty: this.selectedDifficulty }).subscribe({
       next: (state) => {
-        this.gameState = state;
-        this.scoreboard = state.scoreboard;
+        this.updateGameState(state);
         this.isBusy = false;
       },
       error: (err) => {
@@ -198,5 +202,49 @@ export class AppComponent implements OnInit {
     }
 
     return fallback;
+  }
+
+  private updateGameState(state: GameStateResponse): void {
+    const previousStatus = this.gameState?.status;
+
+    this.gameState = state;
+    this.scoreboard = state.scoreboard;
+
+    if (state.status === 'Won' && previousStatus !== 'Won') {
+      this.showResultPopup(`Player ${state.winner} wins!`, 'win');
+      return;
+    }
+
+    if (state.status === 'Draw' && previousStatus !== 'Draw') {
+      this.showResultPopup('Game ended in a draw!', 'draw');
+      return;
+    }
+
+    if (state.status === 'InProgress') {
+      this.hideResultPopup();
+    }
+  }
+
+  private showResultPopup(message: string, type: 'win' | 'draw'): void {
+    this.resultPopupMessage = message;
+    this.resultPopupType = type;
+    this.clearPopupTimer();
+
+    this.popupTimer = setTimeout(() => {
+      this.hideResultPopup();
+    }, 3000);
+  }
+
+  private hideResultPopup(): void {
+    this.resultPopupMessage = '';
+    this.resultPopupType = null;
+    this.clearPopupTimer();
+  }
+
+  private clearPopupTimer(): void {
+    if (this.popupTimer !== null) {
+      clearTimeout(this.popupTimer);
+      this.popupTimer = null;
+    }
   }
 }

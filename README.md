@@ -13,6 +13,26 @@ The backend is the source of truth for game rules, validation, game status, move
 - Storage: In-memory
 - Tests: xUnit for backend, Jasmine/Karma for frontend component basics
 
+## Software Requirements
+Install the following tools before running the project:
+
+- Git 2.40+
+- .NET SDK 9.0.x
+- Node.js 20+ (Node 22 or 24 also works)
+- npm 10+
+- A modern browser (Chrome, Edge, or Firefox)
+
+Optional for running frontend unit tests:
+
+- Chrome (used by Karma ChromeHeadless)
+
+Version check commands:
+
+- `git --version`
+- `dotnet --version`
+- `node --version`
+- `npm --version`
+
 ## Implemented Features
 - 3x3 board with lock on occupied cells
 - Two Player mode
@@ -21,6 +41,7 @@ The backend is the source of truth for game rules, validation, game status, move
 - Turn handling and invalid move validation
 - Win detection (row/column/diagonal)
 - Draw detection
+- Auto-closing result popup (3 seconds) for win and draw
 - Winning cell highlighting
 - Move history table
 - Undo Last Move with mode-specific behavior
@@ -46,9 +67,12 @@ This structure is ready for separate frontend/backend source uploads.
 ## Backend Run Instructions
 1. Open terminal in `backend`
 2. Run:
-   - `dotnet restore`
-   - `dotnet run --project TicTacToe.Api`
+  - `dotnet restore`
+  - `dotnet run --project TicTacToe.Api`
 3. API base URL (default): `http://localhost:5249`
+4. Quick verification:
+  - Open `http://localhost:5249/api/scoreboard`
+  - Expected response shape: `{ "xWins": 0, "oWins": 0, "draws": 0 }`
 
 ## Frontend Run Instructions
 1. Install Node.js 20+ and npm if not installed
@@ -57,6 +81,40 @@ This structure is ready for separate frontend/backend source uploads.
    - `npm install`
    - `npm start`
 4. App URL: `http://localhost:4200`
+5. Quick verification:
+  - Open `http://localhost:4200`
+  - Select game mode and make moves on the board
+
+## Quick Start (Interviewer Friendly)
+Use two terminals.
+
+Terminal 1 (backend):
+
+- `cd backend`
+- `dotnet restore`
+- `dotnet run --project TicTacToe.Api`
+
+Terminal 2 (frontend):
+
+- `cd frontend/tictactoe-ui`
+- `npm install`
+- `npm start`
+
+Open:
+
+- Frontend: `http://localhost:4200`
+- Backend scoreboard endpoint: `http://localhost:5249/api/scoreboard`
+
+## Test Run Commands
+Backend tests:
+
+- `cd backend`
+- `dotnet test TicTacToe.sln`
+
+Frontend tests:
+
+- `cd frontend/tictactoe-ui`
+- `npm test -- --watch=false --browsers=ChromeHeadless`
 
 ## API Endpoint Summary
 ### Game APIs
