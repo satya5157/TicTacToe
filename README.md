@@ -85,7 +85,7 @@ This structure is ready for separate frontend/backend source uploads.
   - Open `http://localhost:4200`
   - Select game mode and make moves on the board
 
-## Quick Start (Interviewer Friendly)
+## Quick Start
 Use two terminals.
 
 Terminal 1 (backend):
