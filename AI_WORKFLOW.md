@@ -68,7 +68,7 @@ Review depth:
 
 Additional trade-off notes:
 - Version selection (.NET 9 and Angular 18) was my engineering choice based on local toolchain compatibility and modern framework support.
-- Chose in-memory state over SQLite to reduce setup complexity for reviewers.
+- Chose in-memory state over SQLite to reduce setup complexity.
 - Focused heavier testing on backend game-state transitions where most risk exists.
 - Kept frontend state minimal to avoid rule duplication and drift from backend truth.
 
